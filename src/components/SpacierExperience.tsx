@@ -11,7 +11,7 @@
    imperative refs for the Three.js orb / audio / cursor loops).
    ============================================================ */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { createOrb, type OrbApi } from "@/lib/orb";
@@ -22,6 +22,7 @@ import {
   ORDER,
   SUGGEST,
   matchIntent,
+  matchSmallTalk,
   type Scene,
 } from "@/lib/intents";
 import {
@@ -48,6 +49,7 @@ export default function SpacierExperience() {
   const [xr, setXr] = useState<XrState>({ mode: null, label: "AR / VR", disabled: false });
   const [unlocked, setUnlocked] = useState(false);
   const [pinError, setPinError] = useState("");
+  const [suggestOffset, setSuggestOffset] = useState(0);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,6 +60,7 @@ export default function SpacierExperience() {
   const reducedRef = useRef(false);
   const revertRef = useRef<number | undefined>(undefined);
   const bodyRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const suggestPausedRef = useRef(false);
 
   useEffect(() => {
     sceneRef.current = scene;
@@ -73,6 +76,25 @@ export default function SpacierExperience() {
     if (revertRef.current) clearTimeout(revertRef.current);
     setReply(text);
   }, []);
+
+  /* rotate the recommendations strip every 3s (paused on hover) */
+  const SUGGEST_VISIBLE = 4;
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      if (suggestPausedRef.current) return;
+      setSuggestOffset((o) => (o + SUGGEST_VISIBLE) % SUGGEST.length);
+    }, 3000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const visibleSuggest = useMemo(
+    () =>
+      Array.from(
+        { length: Math.min(SUGGEST_VISIBLE, SUGGEST.length) },
+        (_, i) => SUGGEST[(suggestOffset + i) % SUGGEST.length],
+      ),
+    [suggestOffset],
+  );
 
   /* ---------- scene system ---------- */
   const activate = useCallback((name: Scene, viaUser = true) => {
@@ -108,6 +130,13 @@ export default function SpacierExperience() {
     (text: string) => {
       if (!text.trim()) return;
       orbRef.current?.pulse();
+      // greetings / casual chat first — reply warmly, don't navigate
+      const chat = matchSmallTalk(text);
+      if (chat) {
+        avatarSay(chat);
+        revertSoon(6000);
+        return;
+      }
       const route = matchIntent(text);
       if (route) {
         avatarSay(INTENTS[route].say);
@@ -764,9 +793,13 @@ export default function SpacierExperience() {
       <div id="console" className={consoleClass}>
         <div id="avatar-reply" className="show">
           {reply ? <div className="reply-line">{reply}</div> : null}
-          <div className="suggest-row">
+          <div
+            className="suggest-row"
+            onMouseEnter={() => (suggestPausedRef.current = true)}
+            onMouseLeave={() => (suggestPausedRef.current = false)}
+          >
             <span className="suggest-lead">{reply ? "Or try" : "Try asking"}</span>
-            {SUGGEST.map((s) => (
+            {visibleSuggest.map((s) => (
               <button key={s.p} className="sugg" onClick={() => onSuggest(s.p)}>
                 {s.p}
               </button>
