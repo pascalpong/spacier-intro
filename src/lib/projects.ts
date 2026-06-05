@@ -91,7 +91,7 @@ export const PROJECTS: Project[] = [
     tag: "Nightlife · Group",
     blurb:
       "Cinematic, full-screen brand experience for the entertainment group. Access-gated — shown on request.",
-    size: "",
+    size: "sm",
     pin: true,
   },
 ];
