@@ -1,0 +1,30 @@
+{
+  "name": "spacier-intro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Spacier — the solo web studio site of Pascal. A cinematic, interactive portfolio with a Three.js AI-avatar orb.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "shots": "node scripts/capture-work.mjs"
+  },
+  "dependencies": {
+    "next": "15.5.19",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "three": "0.171.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "@types/three": "0.171.0",
+    "eslint": "9.18.0",
+    "eslint-config-next": "15.5.19",
+    "puppeteer-core": "^23.11.1",
+    "typescript": "5.7.3"
+  }
+}

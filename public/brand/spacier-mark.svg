@@ -1,0 +1,24 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Spacier orb mark">
+  <defs>
+    <radialGradient id="sp-orb" cx="40%" cy="34%" r="78%">
+      <stop offset="0%" stop-color="#eef6c8"></stop>
+      <stop offset="14%" stop-color="#9bb24a"></stop>
+      <stop offset="42%" stop-color="#2c3550"></stop>
+      <stop offset="78%" stop-color="#11131f"></stop>
+      <stop offset="100%" stop-color="#07080c"></stop>
+    </radialGradient>
+    <radialGradient id="sp-spec" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"></stop>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.5"></stop>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+  
+  <circle cx="40" cy="40" r="32" fill="none" stroke="#ccff00" stroke-opacity="0.18" stroke-width="4"></circle>
+  
+  <circle cx="40" cy="40" r="29" fill="url(#sp-orb)"></circle>
+  
+  <circle cx="40" cy="40" r="29" fill="none" stroke="#ccff00" stroke-opacity="0.85" stroke-width="1.4"></circle>
+  
+  <circle cx="33" cy="31" r="7.5" fill="url(#sp-spec)"></circle>
+</svg>
